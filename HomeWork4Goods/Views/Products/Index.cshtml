@@ -1,0 +1,105 @@
+﻿@model IEnumerable<HomeWork4Products.Models.Product>
+@using Microsoft.AspNetCore.Identity
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="d-flex justify-content-end align-items-center mb-3">
+    <span class="me-2">User: @User.Identity.Name</span>
+    <form asp-action="Logout" asp-controller="User" method="post">
+        <button type="submit" class="btn btn-info">Log out</button>
+    </form>
+</div>
+@{
+    if (User.IsInRole("admin"))
+    {
+        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+            <ul class="navbar-nav flex-grow-1">
+                <li class="nav-item">
+
+                    <a asp-area="" asp-controller="User" asp-action="Register">Registration</a>
+                </li>
+                <li class="nav-item">
+
+                    <a asp-area="" asp-controller="User" asp-action="CreateRole">Create Role</a>
+                </li>
+                <li class="nav-item">
+
+                    <a asp-area="" asp-controller="User" asp-action="AssignRole">Assign Role</a>
+                </li>
+                <li class="nav-item">
+                    <a asp-area="" asp-controller="Products" asp-action="Index">Products</a>
+                </li>
+            </ul>
+        </div>
+    }
+    else
+    {
+        <div class="mb-3 text-center">
+            <p>User is not admin</p>
+        </div>
+    }
+}
+
+<div class="mb-3 text-center">
+    <h1>Our products</h1>
+</div>
+
+<form method="get" asp-action="Index">
+    <div class="input-group mb-3">
+        <input type="text" name="searchString" class="form-control" placeholder="Search products..." aria-label="Search products..." />
+        <button class="btn btn-primary" type="submit">Search</button>
+    </div>
+</form>
+<p>
+
+    <a class="btn btn-primary" asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td class="text-nowrap">
+                    @if (User.IsInRole("admin"))
+                    {
+                    <a class="btn btn-info btn-sm" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    }
+                    
+                    <a class="btn btn-warning btn-sm" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    @if (User.IsInRole("admin"))
+                    {
+                    <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+
